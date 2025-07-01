@@ -1,0 +1,16 @@
+[white]#White#
+[silver]#Silver#	
+[gray]#Gray#	
+[black]#Black#	
+[red]#Red#	
+[maroon]#Maroon#	
+[yellow]#Yellow#	
+[olive]#Olive#	
+[lime]#Lime#	
+[green]#Green#	
+[aqua]#Aqua#	
+[teal]#Teal#	
+[blue]#Blue#	
+[navy]#Navy#
+[fuchsia]#Fuchsia#	
+[purple]#Purple#

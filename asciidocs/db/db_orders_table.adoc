@@ -1,0 +1,12 @@
+= БД
+
+.Заказы
+|=======================
+|Поле | Тип данных | Описание 
+ifdef::default[|guid | UUID       | Уникальный идентификатор заказа ]
+
+ifdef::feature1[| status | Enum | Доступные значения] 
+ifdef::feature1-div[|[.line-through]#isReady# | Boolean       | Можно ли забирать заказ ]
+ifndef::feature1[|isReady | Boolean       | Можно ли забирать заказ ]
+
+|=======================

@@ -1,0 +1,12 @@
+Параметр,,,, Описание, Маппинг БД, Тип данных, Обязательность, Комментарии
+guid,,,, Уникальный идентификатор параметра, ORDER.GUID, UUID, Да, 
+,lines,,, Массив элементов в заказе, ORDER_LINE, Array, Да,
+,,line,, Одна позиция в заказе, ORDER_LINE, Object, Да,
+,,,product_guid, Уникальный идектификатор продукта, ORDER_LINE.PRODUCT_GUID, UUID, Да,
+,,,amount,  Количество единиц продукта, ORDER_LINE.AMOUNT, Integer, Да,
+,,,price, Строимость единицы продукта на момент заказа, ORDER_LINE.PRICE, Double, Да,
+prices,,,, Цены заказа, ORDER, Object, Да,
+,subtotal,,, Стоимость без скидок, ORDER.SUBTOTAL, Double, Да,
+,deliveryCost,,, Стоимость доставки, ORDER.DLIVERY_COST, Double, Да,
+,discount,,,Скидки по заказу, ORDER.DISCOUNT, Double, Да,
+,totalPrice,,, Фильная стоимость заказа с учетом скидок и доставки, ORDER.TOTAL_PRICE, Double, Да,

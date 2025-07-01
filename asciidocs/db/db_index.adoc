@@ -1,0 +1,3 @@
+:default:
+:feature1:
+include::db_orders_table.adoc[]

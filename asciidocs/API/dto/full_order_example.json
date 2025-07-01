@@ -1,0 +1,14 @@
+{
+    "guid": "11cab2d9-72b3-4378-9270-7ea45207d11f",
+    "lines":[{
+        "product_guid": "8e75f23f-14ab-4f0c-a830-16a59d3247f2",
+        "amount": 2,
+        "price": 10.23
+    }],
+    "prices": {
+        "subtotal": 20.46,
+        "deliveryCost": 0.0,
+        "discount": 1.0,
+        "totalPrice": 19.46
+    }
+}

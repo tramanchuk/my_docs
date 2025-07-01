@@ -1,0 +1,5 @@
+:api-title: Получение списка заказов
+:api-url: GET /v1/orders
+:api-structure: dto/full_order_dto.csv
+:api-example: dto/full_order_example.json
+include::api_template.adoc[]

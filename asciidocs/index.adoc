@@ -1,0 +1,11 @@
+////
+Main document for all chapters
+////
+:toc: 
+:toclevels: 4
+include::versions/v1.adoc[]
+= Полная документация
+
+include::db/db_index.adoc[leveloffset=+1]
+include::API/api_index.adoc[leveloffset=+1]
+

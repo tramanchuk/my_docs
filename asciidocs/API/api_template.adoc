@@ -1,0 +1,16 @@
+= {api-title}
+
+== {api-url}
+Описание API метода
+[%header, format=csv]
+|===
+include::{api-structure}[]
+|===
+
+.Example
+[%collapsible]
+====
+----
+include::{api-example}[]
+----
+====

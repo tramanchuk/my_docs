@@ -1,0 +1,17 @@
+@startuml order_flower
+
+title Процесс заказа цветов
+autonumber
+
+!include styles/seq_styles.puml
+!include participants.puml
+!include usecase2.puml
+!include usecase1.puml
+
+'possible positions for legend: left | right | top | botton | center '
+legend left 
+    | Version | Modified By | Modified At |
+    | v1 | Tatsiana | 20-12-2024 |
+endlegend
+
+@enduml

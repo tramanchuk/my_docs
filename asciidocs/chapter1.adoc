@@ -1,0 +1,20 @@
+= БД
+== Диаграмма
+Какая-то диаграмма
+== Описание
+Описание диаграммы
+
++++ <details><summary> +++
+Check `reference.conf`:
++++ </summary><div> +++
+----
+play {
+  http {
+    secret.key = asdf
+    secret.key = ${?SECRET_KEY}
+    ...
+  }
+  ...
+}
+----
++++ </div></details> +++
