@@ -1,0 +1,258 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Order API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://my.api.com"
+    }
+  ],
+  "paths": {
+    "/orders": {
+      "post": {
+        "summary": "Create a new order",
+        "security": [
+          {
+            "OAuth2": [
+              "write",
+              "read"
+            ]
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exception"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exception"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not acceptable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exception"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exception"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exception"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exception"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "scopes": {
+              "write": "modify objects in your account",
+              "read": "read objects in your account"
+            },
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "tokenUrl": "https://example.com/oauth/token"
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Order": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "guid": {
+            "type": "string",
+            "maxLength": 36,
+            "pattern": "^[a-e0-9-]{36}$",
+            "example": "8b3b5005-824b-4dea-be58-220dc50a5c48"
+          },
+          "orderLines": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/OrderLine"
+            }
+          }
+        }
+      },
+      "OrderLine": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "guid": {
+            "type": "string",
+            "maxLength": 36,
+            "pattern": "^[a-e0-9-]{36}$",
+            "example": "57f25170-54ae-46ee-9503-54c904384678"
+          },
+          "name": {
+            "type": "string",
+            "example": "toy",
+            "maxLength": 10,
+            "pattern": "^[A-Za-z0-9]{3,10}$"
+          },
+          "count": {
+            "type": "integer",
+            "maximum": 20,
+            "minimum": 1,
+            "format": "int32",
+            "example": 2
+          }
+        }
+      },
+      "Exception": {
+        "type": "object",
+        "required": [
+          "status",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Code",
+            "minLength": 3,
+            "maxLength": 3,
+            "pattern": "^[1-5][0-9]{2}$",
+            "example": "403"
+          },
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "timestamp",
+              "requerstId"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code",
+                "minLength": 1,
+                "maxLength": 30,
+                "pattern": "^[A-Z0-1_]{1,30}$",
+                "example": "INTERNAL_SERVER_ERROR"
+              },
+              "message": {
+                "type": "string",
+                "description": "Error description",
+                "maxLength": 500,
+                "pattern": "^[a-zA-Z0-1_,.!?\\-\\\\/\\(\\)\\[\\]\\{\\}:; \"]{1,30}$"
+              },
+              "details": {
+                "type": "array",
+                "minItems": 0,
+                "maxItems": 20,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "field"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "field": {
+                      "type": "string",
+                      "maxLength": 30,
+                      "pattern": "^[a-zA-Z0-9]{1,30}$",
+                      "example": "name"
+                    },
+                    "expectedFormat": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "^[a-zA-Z0-9_,.!?;:\\\\ \\(\\)\\[\\]-]{1,300}$",
+                      "example": "PAssword must be at least 10 characters length"
+                    },
+                    "message": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "^[a-zA-Z0-1_,.!?\\-\\\\/\\(\\)\\[\\]\\{\\};; \"]{1,300}$",
+                      "example": "name is a required field"
+                    }
+                  }
+                }
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "maxLength": 20,
+                "example": "2018-03-20T09:12:28.000Z"
+              },
+              "requerstId": {
+                "type": "string",
+                "maxLength": 15,
+                "pattern": "^[a-zA-Z0-9]$"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
