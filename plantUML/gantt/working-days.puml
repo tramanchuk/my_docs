@@ -1,0 +1,8 @@
+@startgantt WorkingDays
+sunday are closed
+saturday are closed
+2025-01-01 to 2025-01-07 are closed
+2025-01-01 to 2025-01-07 are named [New Year]
+2025-01-01 to 2025-01-07 are colored in salmon
+2025-01-11 is open
+@endgantt

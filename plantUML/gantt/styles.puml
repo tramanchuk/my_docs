@@ -1,0 +1,51 @@
+@startgantt PlanStyles
+<style>
+ganttDiagram {
+  task {
+    FontName Helvetica
+	FontColor red
+	FontSize 18
+	FontStyle bold
+	BackGroundColor GreenYellow
+	LineColor blue 
+    unstarted {
+      BackGroundColor Fuchsia 
+      LineColor FireBrick
+    }
+  }
+  milestone {
+		FontColor blue
+		FontSize 25
+		FontStyle italic
+		BackGroundColor yellow
+		LineColor red
+	}
+	note {
+		FontColor DarkGreen
+		FontSize 10
+		LineColor OrangeRed
+	}
+	arrow {
+		FontName Helvetica
+		FontColor red
+		FontSize 18
+		FontStyle bold
+		BackGroundColor GreenYellow
+		LineColor blue
+	}
+	separator {
+		LineColor red
+		BackGroundColor green
+		FontSize 16
+		FontStyle bold
+		FontColor purple
+	}
+}
+</style>
+language ru
+hide resources names
+hide resource footbox
+printscale daily
+today is colored in pink
+Label on first column and right aligned
+@endgantt

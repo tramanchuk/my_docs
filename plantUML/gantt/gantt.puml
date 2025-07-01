@@ -1,0 +1,34 @@
+@startgantt BookStorePlan
+
+Project starts 2025-01-01
+
+-- Tasks --
+[Task 1] requires 1 days
+note bottom
+    - collect all date
+    - send to customer
+    - confirm receiving
+end note
+[Task 2] requires 5 days
+[Task 3] requires 3 days
+[Task 4] requires 3 days
+[Task 4] displays on same row as [Task 1]
+[Task 1] -> [Task 2]
+[Task 3] ends 1 day before [Task 2]'s end
+[Task 2] -> [Task 4]
+[Task 2] pauses on 2025-01-10
+[Task 3] is deleted
+
+-- Prototype 2 --
+[Prototype design1] requires 14 days
+then [Test prototype1] requires 4 days
+then [Deploy prototype1] requires 6 days
+
+legend
+Legend:
+|= Color |= Task Type |
+|<#gray> | Planned |
+|<#Green>| In progress |
+|<#blue> | Done |
+end legend
+@endgantt

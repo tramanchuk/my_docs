@@ -1,0 +1,9 @@
+@startuml
+User -> Front : оплатить
+Front -> Back : POST /v1/payments
+Back -> Back : создание оплаты
+Back -> Payment System : payment_token, 
+Fron <-- Back : payment_id, sum
+
+Front -> Payment system : запрос на оплату()
+@enduml

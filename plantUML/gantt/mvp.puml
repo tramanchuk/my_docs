@@ -1,0 +1,16 @@
+@startgantt MVPPlan
+!include header.puml
+
+[Prototype design] as [PD] on {BA} {SA} starts D+0 and requires 10 days
+[PD] is 40% completed
+
+Separator just at [PD]'s end
+Separator just 8 days after [PD]'s end
+-- MVP --
+[Test prototype] as [PT] on {SA:50%} requires 10 days
+[PD] -> [PT]  
+[Create NFR] as [NFR] starts at [PT]'s start and requires 5 days
+[NFR] is colored in red
+[Prototype completed] as [PC] happens 2025-01-20
+
+@endgantt

@@ -1,0 +1,170 @@
+@startuml
+
+skinparam linetype ortho
+entity "CART" {
+  * id : UUID
+  --
+  user_id: UUID
+  pick_up_point_id: UUID
+  payment_token: VARCHAR
+  payment_type: ENUM  
+}
+entity "CART_ITEMS" {
+  * id : UUID
+  --
+  cart_id : UUID
+  amount : INT
+  product_id : UUID
+}
+
+entity "ORDERS" {
+  * id : UUID
+  --
+  subtotal : DECIMAL
+  delivery_cost : DECIMAL
+  total : DECIMAL
+  user_id: UUID
+  pick_up_point_id: UUID
+  payment_token: VARCHAR
+  payment_type: ENUM
+}
+
+entity "ORDER_ITEMS" {
+  * id : UUID
+  --
+  purchase_status : ENUM 
+  delivery_status: ENUM
+  order_id : UUID
+  amount : INT
+  base_price : DECIMAL
+  product_id : UUID
+  received_date: DATE
+  return_payment_id : VARCHAR
+  pup_number: INT
+}
+
+entity "ORDER_ITEM_PAYMENT" {
+  order_item_id : UUID 
+  payment_id : UUID
+}
+
+entity "PAYMENT" {
+  * id : UUID
+  --
+  status : ENUM 
+  ps_payment_id : VARCHAR
+  sum: DECIMAL
+  from_balance : BOOLEAN
+  create_at: datetime
+}
+
+entity "PRODUCTS" {
+  * id : UUID
+  --
+  code : VARCHAR(50)
+  name : VARCHAR(100)
+  description : TEXT
+  price : DECIMAL 
+  brand : VARCHAR(100)
+  image_icon : VARCHAR
+  image_main : VARCHAR
+  image_zoom : VARCHAR
+  parent_id : UUID
+  start_date: date
+  end_date: date
+  category_id: UUID
+}
+
+entity "CATEGORY" {
+  * id : UUID
+  --
+  code : VARCHAR(50)
+  name : VARCHAR(100)
+  parent_id: UUID
+}
+
+entity "VARIANTS" {
+  * id : UUID
+  --
+  name : VARCHAR
+}
+
+entity "PRODUCTS_VARIANTS"{
+  variant_id : UUID
+  product_id : UUID
+}
+
+entity "STOCK_LEVELS" {
+  * id : UUID
+  --
+  product_id : UUID
+  warehouse_id : UUID
+  free_amount : INT
+  reserved_amount : INT
+}
+
+entity "WAREHOUSES" {
+  * id : UUID
+  --
+  name : VARCHAR
+  address_id : UUID
+}
+entity "PICK_UP_POINT" {
+  * id : UUID
+  --
+  address_id : UUID
+
+}
+
+entity "ADDRESS" {
+  * id : UUID
+  --
+  country : VARCHAR
+  city : VARCHAR
+  street_name : VARCHAR
+  street_number : VARCHAR
+  apartment: VARCHAR 
+}
+
+entity "USERS" {
+  * id : UUID
+  --
+  name : VARCHAR
+  phone : VARCHAR
+  email : VARCHAR
+  password : VARCHAR
+  balance: DECIMAL
+  delivery_code: INT
+}
+
+entity "WISH_PRODUCTS" {
+  --
+  user_id : UUID
+  product_id : UUID
+}
+
+ORDERS }o-|| USERS
+USERS ||-o{ WISH_PRODUCTS
+WISH_PRODUCTS }o--|| PRODUCTS
+PRODUCTS ||-o{ PRODUCTS
+PRODUCTS ||--o{ PRODUCTS_VARIANTS
+PRODUCTS_VARIANTS ||--o{ VARIANTS
+PRODUCTS }o-|| CATEGORY
+CATEGORY ||-o{ CATEGORY
+
+ORDERS ||--|{ ORDER_ITEMS 
+ORDER_ITEMS }o-|| PRODUCTS
+PRODUCTS ||-o{ STOCK_LEVELS  
+ORDER_ITEMS ||--o{ ORDER_ITEM_PAYMENT
+ORDER_ITEM_PAYMENT }o--|| PAYMENT
+
+PICK_UP_POINT ||-o{ ORDERS
+PICK_UP_POINT |o--|| ADDRESS
+ADDRESS ||--o| WAREHOUSES
+WAREHOUSES }o--|| STOCK_LEVELS
+
+CART ||-o{ CART_ITEMS
+CART |o--|| USERS
+PICK_UP_POINT |o-o{ CART
+CART_ITEMS }o--|| PRODUCTS
+@enduml

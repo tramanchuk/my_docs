@@ -1,0 +1,14 @@
+@startuml userCase1
+== Use Case 2  start ==
+User -> Client ++ : Наполнить корзину и подтвержить заказ
+Client -> Client ++-- : Отобразить, что заказ отправлен на обработку
+Client -> Server ++ : Передать данные заказа
+Server -> Server ++-- : Обработать заказ на сервере
+!$st = "статус и стоимость заказа"
+Server -> Server ++--: Обновить $st
+Client <-- Server -- : Передать $st
+Client -> Client ++-- :  Отобразить $st
+deactivate Client
+== Use case 2 end ==
+
+@enduml

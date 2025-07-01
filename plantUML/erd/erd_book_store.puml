@@ -1,0 +1,46 @@
+@startuml BookStoreErd
+
+skinparam linetype ortho
+
+entity Product {
+    * id: UUID
+    --
+    * name: varchar(100)
+    description: varchar(500)
+}
+entity Order {
+    * id: UUID
+    --
+    * created_date: datetime
+    * delivery_address: UUID <<FK>>
+    * user_id: UUID <<FK>>
+}
+entity Order_Line{
+    * **id: UUID** <<generated>>
+    --
+    * product_id: UUID <<FK>>
+    * count: int
+    * price: double
+    * order_id: UUID <<FK>>
+}
+entity Address{
+    * id: UUID
+    --
+    * country: enum
+    * city: varchar(100)
+    * street_name: varchar(200)
+    * street_number: varchar(100)
+    * phone: varchar(100)
+}
+entity User{
+    * id: UUID
+    --
+}
+
+Order ||-|{ Order_Line
+Order_Line }o-|| Product
+Address |o--o{ Order
+Address }o-|| User
+User ||-|| Order
+
+@enduml

@@ -1,0 +1,10 @@
+@startuml my_procedures_lib
+!procedure $getData2($request, $response, $actor1, $actor2, $actor3)
+
+$actor1 ->  $actor2 ++ : $request
+$actor2 ->  $actor3 ++ : $request
+$actor2 <-- $actor3 -- : $response
+$actor1 <-- $actor2 -- : $response
+
+!endprocedure
+@enduml

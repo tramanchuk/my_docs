@@ -1,0 +1,6 @@
+@startgantt Header
+!include styles.puml
+!include working-days.puml
+!include vacations.puml
+!include project_dates.puml
+@endgantt
