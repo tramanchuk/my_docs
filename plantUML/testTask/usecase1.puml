@@ -1,0 +1,44 @@
+@startuml userCase1
+
+!include procedures/my_procedures.puml
+
+== Use Case 1  start ==
+%invoke_procedure("$getData2", "get flowers", "flowers", User, Client, Server)
+%invoke_procedure("$getData2", "get flower", "flower details", User, Client, Server)
+
+User -> Client ++ : Наполнить корзину и подтвержить заказ
+note over User: this is a first note 
+note over User
+{{json 
+    %load_json("data/my_order.json")
+}}
+end note
+note over User
+{
+    "order":"qweqwe",
+    "details": [{
+        "guid": "12312312312",
+        "name": "ssss"
+    },{
+        "guid": "12312312312",
+        "name": "ssss"
+    }]
+}
+end note
+
+Client -> Client ++-- : Отобразить, что заказ отправлен на обработку
+Client -> Server ++ : Передать данные заказа
+Server -> Server ++-- : Обработать заказ на сервере
+!$st = "статус и стоимость заказа"
+alt #f0feed Обращение успешно сохранено
+	Client <-- Server    : Ответ(получено)
+    Client <-- Server -- : Передать $st
+    Client -> Client ++-- :  Отобразить $st
+Server -> Server ++--: Обновить $st
+else #fff0f5 Ошибка сохранения в портале
+	Client <-- Server : Ответ (ошибка)
+    Client -> Client ++-- :  Отобразить Ошибку
+end
+deactivate Client
+== Use case 1 end ==
+@enduml

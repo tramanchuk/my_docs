@@ -1,0 +1,11 @@
+@startuml participants
+
+actor "Пользователь дорогой" as User order 10
+box "Приложение" #f9fabb
+    participant "<&monitor>\nКлиент родимый" as Client order 20
+    participant "<img:icons/server.png{scale=0.2}>\nСервер великолепный" as Server order 30
+    queue "Брокерок" as Broker1 order 25
+    database "Базенка" as Db order 35
+end box
+
+@enduml

@@ -1,0 +1,8 @@
+@startgantt FullProjectPlan
+!include header.puml
+
+Project starts 2025-01-01
+!include mvp.puml
+!include gantt.puml
+!include milestones.puml
+@endgantt

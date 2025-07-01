@@ -1,0 +1,11 @@
+@startgantt BookStorePlan
+!include header.puml
+
+-- Review --
+[Review 01] happens at 2025-01-08
+[Review 02] happens on 3 weeks after [Review 01]'s end
+[Review 03] happens on 25 days after [Review 01]'s end
+[Review 02] displays on same row as [Review 01]
+[Review 03] displays on same row as [Review 01]
+
+@endgantt

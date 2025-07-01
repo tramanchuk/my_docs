@@ -1,0 +1,146 @@
+@startuml Order creation flow
+skinparam {
+    ParticipantPadding 30
+    MaxMessageSize 150
+} 
+<style>
+note {
+  MaximumWidth 300
+}
+</style>
+
+== Добавление продуктов в корзину ==
+User -> Front++: добавить продукт
+Front -> Back++ : PATCH /v1/carts/{id} (продукты и количество в теле)
+alt если корзина не создана
+    Back -> Back++-- : создать корзину
+    note right Back: Нет корзины только \nу пользователя, который \nникогда не совершал покупок
+end 
+Front <-- Back-- : корзина
+User <-- Front-- : страница, где был пользователь, с обновленными данными по корзине
+
+== Оформление заказа ==
+User -> Front++ : открыть корзину
+Front -> Back++ : GET /v1/payment_types
+Front <-- Back-- : доступные типы оплаты
+Front -> Back++ : GET /v1/carts
+note right Back: У пользователя не может \nбыть больше одной корзины
+Front <-- Back-- : user's cart
+User <-- Front-- : страницу корзины
+
+== Выбор пункта выдачи ==
+alt У пользователя не выбран пункт выдачи или пользователь хочет его изменить
+    User -> Front++ : выбрать пункт выдачи
+    Front -> Back++ : GET /v1/pick_up_points
+    Front <-- Back-- : все точки выдачи
+    User <-- Front-- : страницу выбора пункта выдачи
+
+    User -> Front++ : выбрал пункт выдачи
+    Front -> Back++ : PATCH /v1/carts/{id} (в теле id пункта выдачи)
+    Front <-- Back-- : детали корзины
+User <-- Front-- : обновленная страница корзины
+end
+
+== Выбор способа оплаты ==
+note over Front: Часть страницы по работе с картами генерируется скриптом платежной системы и отображает все доступные для оплаты карты
+== Добавление карты ==
+alt У пользователя нет ни одной карты или хочет добавить новую
+    User -> PSFront++ : добавить карточку
+    User <-- PSFront-- : страница добавление карточки
+    User -> PSFront++ : данные карточки
+    PSFront -> PSBack++ : сохранение данных
+    PSFront <-- PSBack-- : id payment
+    User <-- PSFront-- : список доступных для оплаты карт и payment_token для оплаты добавленной картой
+
+    Front -> Back++ : PATCH /v1/carts/{id} и новый payment_token
+    Front <-- Back-- : детали корзины
+end
+
+== Выбрать другую сохраненную карту для оплаты ==
+opt Пользователь меняет карточку для оплаты
+    User -> PSFront++ : выбрать другую карту для оплаты
+    PSFront -> PSBack++ : выбранная карта
+    PSFront <-- PSBack-- : новый payment_token и краткая информация о карте
+    User <-- PSFront-- : экран с выбранной картой
+    Front -> Back++ : PATCH /v1/carts/{id} и новый payment_token
+    Front <-- Back-- : все детали корзины
+end
+
+== Выбрать тип оплаты: сразу или при получении ==
+User -> Front++ : использовать тип оплаты "сразу"
+Front -> Back++ : PATCH /v1/carts/{id} в теле способ оплаты
+Front <-- Back--: обновленные данные по корзине
+User <-- Front-- : все детали корзины
+
+== Выбрать только несколько cart_items для покупки ==
+User -> Front++ : выбрать продукт для покупки
+Front -> Front++-- : отметить выбранный продукт
+Front -> Back++ : POST /v1/costs, в теле выбранные cart_items.id
+Back -> Back++--: вычислить стоимость и скидки
+Front <-- Back--: стоимости
+User <-- Front-- : обновляем стоимость выбранных товаров к оплате
+
+== Создание заказа ==
+User -> Front++ : создать заказ
+Front -> Back++ : POST /v1/orders, в теле выбранные cart_items
+Back -> Back++-- : создать заказ
+Back -> Back++-- : уменьшить stock_level.free_amount, увеличить reserved_amount
+alt Если оплата сразу
+    note over Front: если оплата и балансом и карточкой, то в транзакции, если оплата не прошла, то заказ все равно создается, но оплата при получении
+    opt Если у пользователя баланс > 0
+        Back -> Back++-- : списывает сумму с баланса пользователя
+        Back -> Back++-- : from_balance в payment указать сумму списанную с баланса
+    end
+    opt Если у пользователя баланс = 0 либо стоимость заказа больше баланса
+        Back -> PSBack++ : запрос на оплату и сумму оплаты
+        PSBack -> PSBack++-- : снимает деньги с карточки
+        Back <-- PSBack-- : результат оплаты и payment_id
+        Back -> Back++-- : сохранить status и payment_id
+    end
+end
+Front <-- Back-- : заказ создан и результат оплаты, если оплата сразу
+User <-- Front-- : страницу с заказом и информацией об оплате
+
+== Товар доставлен на пункт выдачи ==
+note over Front : User - это менеджер пункта выдачи, Front - backoffice
+User -> Front++ : отметить товар как прибываший на пункт выдачи. order_items.id
+Front -> Back++ : PATCH /v1/order_items/{id}/events/DELIVERED
+Back -> Back++-- : изменение статуса order_items
+alt если у пользователя уже есть order_items, которые ожидают получения на этом пункте выдачи
+    Back -> Back++-- : установить такой же pup_number
+else иначе
+    Back -> Back++-- : сгенерировать pup_number
+end
+Front <-- Back-- : pup_number
+User <-- Front-- : pup_number
+
+
+== Выдача заказа на пункте выдачи ==
+note over Front : Оплату при получении осуществляет сотрудник пункта выдачи через backoffice
+User -> Front++ : ввести код для получения (user.delivery_code)
+User <-- Front-- : страница для ввода кода
+
+User -> Front++ : получить pup_number по user.delivery_code
+Front -> Back++ : GET /v1/order_items?code=<delivery_code>
+Back -> Back++-- : найти pup_number для данного пользователя в данном пункте выдачи
+Front <-- Back-- : pup_number
+User <-- Front-- : pup_number
+User -> User++-- : выдача всех order_items
+
+User -> User++-- : отметить состояние по каждому продукту
+User -> Front++ : отправить состояния по каждому товару
+Front -> Back++ : POST /v1/payments
+Back -> Back++-- : разбить order_item на две, если часть товаров забрали, часть нет
+Back -> Back++-- : проверсти оплату либо вернуть средства
+Front <-- Back-- : вернуть статус оплаты
+User <-- Front-- : вернуть статус оплаты
+
+== Вернуть средства за уже оплаченный товар при отказе ==
+alt Если вернули количество элементов меньше, чем ORDER_ITEMS.amount
+    BACK -> Back++-- : Разбить order_items на две записи
+end
+Back -> PSBack++ : запросить возврат средств. для каждого order_item передать payment_id и  сумму на возврат
+Back <-- PSBack-- : return_id 
+Back -> Back++-- : сохранить return_id в return_payment_id, обновить статус order_item, обновить баланс пользователя
+
+@enduml

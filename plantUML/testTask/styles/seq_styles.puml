@@ -1,0 +1,14 @@
+@startuml styles
+skinparam {
+    ParticipantPadding 30
+    MaxMessageSize 150
+    SequenceMessageAlignment center
+    Style strictuml
+} 
+skinparam Legend {
+    BackgroundColor Linen
+    FontColor black
+    BorderThickness 0
+    Fontsize  10
+}
+@enduml
