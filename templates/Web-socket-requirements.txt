@@ -1,3 +1,4 @@
+https://www.baeldung.com/java-websockets
 Server:
 URI - адрес и порт, куда отправлять сообщение
 OnOpen - Get session and WebSocket connection - подключили нового пользователя? отправить приветственное сообщение? сообщить другим пользователям?
@@ -12,3 +13,13 @@ Data format: (WebSocket specification supports two on-wire data formats, text an
 * Ping-Pong - for  health check (ping) request
 Message Types:
 broadcast???
+
+-----------------------------------------
+https://www.baeldung.com/websockets-api-java-spring-client
+
+Client:
+Stream Text-Oriented Messaging Protocol (STOMP) is a simple, interoperable wire format that allows client and servers to communicate with almost all the message brokers. It is an alternative to AMQP (Advanced Message Queuing Protocol) and JMS (Java Messaging Service).
+
+URL: ws или wss - ws-secured
+На что подписываемся: session.subscribe("/topic/messages", this);
+Куда отправляем: session.send("/app/chat", getSampleMessage());
