@@ -1,0 +1,14 @@
+Server:
+URI - адрес и порт, куда отправлять сообщение
+OnOpen - Get session and WebSocket connection - подключили нового пользователя? отправить приветственное сообщение? сообщить другим пользователям?
+OnMessage - Handle new messages - от кого добавить? кому отправить? 
+OnError - Do error handling here
+OnClose - WebSocket connection closes - если клиент отключился, что сделать написать "Вася Пупкин отключился"?
+
+Data format: (WebSocket specification supports two on-wire data formats, text and binary)
+* Text: 
+* Binary
+* Java objects - конвертируется в text, binary)
+* Ping-Pong - for  health check (ping) request
+Message Types:
+broadcast???
